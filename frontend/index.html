@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Records Management</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <script src="{% static 'js/app.js' %}" defer></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="#">Student Records Application</a>
+    <a href="#">Students</a>
+    <span>Signed in as {{ request.user.username }}</span>
+
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit">Sign Out</button>
+    </form>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <header class="toolbar">
+      <div class="heading">
+        <h1>Students</h1>
+        <p>Manage student records and enrollment information.</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="primary" id="addStudentButton" hidden disabled>Add Student</button>
+      </div>
+    </header>
+
+    <!-- Search Input -->
+    <div class="search">
+      <label for="studentSearch">Search Students:</label>
+      <input type="text" id="studentSearch" placeholder="Enter name, email, or ID">
+    </div>
+
+    <!-- Table Wrapper -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Student Number</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Department</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody">
+          
+        </tbody>
+      </table>
+    </div>
+    <p id="searchSummary" role="status"></p>
+    <dialog id="studentDialog" aria-labelledby="studentDialogTitle">
+      <h2 id="studentDialogTitle">Add Student</h2>
+      <form id="studentForm">
+          {% csrf_token %}
+        <label for="sNumber">
+          Student Number:
+        </label>
+        <input type="text" name="sNumber" id="sNumber" 
+        required>
+        <label for="sFullName">
+          Student Full Name:
+        </label>
+        <input type="text" name="sFullName" id="sFullName" 
+        required>
+        <label for="sEmail">
+          Student Email:
+        </label>
+        <input type="email" name="sEmail" id="sEmail" 
+        required>
+        <label for="sDepartment">
+          Student Department:
+        </label>
+        <input type="text" name="sDepartment" id="sDepartment" 
+        required>
+        <label for="sStatus">
+          Student Status:
+        </label>
+        <select id="sStatus" name="sStatus">
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+        <p id="studentFormError" role="alert"></p>
+        <button type="submit" class="primary" id="saveStudentButton">Save Student</button>
+        <button type="button" id="cancelStudentButton">Cancel</button>
+      </form>
+    </dialog>
+    <dialog id="studentDetailsDialog" aria-labelledby="studentDetailsTitle">
+      <h2 id="studentDetailsTitle">Student Details</h2>
+
+      <dl>
+        <dt>Student Number</dt>
+        <dd id="detailNumber"></dd>
+
+        <dt>Full Name</dt>
+        <dd id="detailName"></dd>
+
+        <dt>Email</dt>
+        <dd id="detailEmail"></dd>
+
+        <dt>Department</dt>
+        <dd id="detailDepartment"></dd>
+
+        <dt>Status</dt>
+        <dd id="detailStatus"></dd>
+      </dl>
+
+      <button type="button" id="closeDetailsButton">Close</button>
+    </dialog>
+  </main>
+  {{ student_permissions|json_script:"studentPermissions" }}
+</body>
+</html>
