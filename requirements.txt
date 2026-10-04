@@ -1,7 +1,8 @@
-# Snapshot of the working Python 3.14.4 environment, including transitive dependencies.
-asgiref==3.12.1
+﻿asgiref==3.12.1
 Django==6.0.8
+gunicorn==26.2.0
 mysqlclient==2.3.0
 python-dotenv==1.2.4
 sqlparse==0.6.0
 tzdata==2026.4
+whitenoise==6.12.0

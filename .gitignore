@@ -6,3 +6,4 @@ __pycache__/
 *.sqlite3-journal
 .env.*
 !.env.example
+backend/staticfiles/
