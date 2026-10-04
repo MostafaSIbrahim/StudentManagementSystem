@@ -8,6 +8,16 @@ A Django and MySQL application with an HTML, CSS, and JavaScript frontend. It su
 
 The deployed application runs on Render with an Aiven MySQL database. Sign in with an account created in the cloud application; local development accounts are separate.
 
+### Public demo access
+
+| Username | Password | Access |
+| --- | --- | --- |
+| `demo_viewer` | `viewdemo` | View and search students only |
+
+These credentials are intentionally public for the read-only demo account. This account cannot add, edit, or delete student records and has no Django admin access. Its local setup is complete; the same account must be provisioned in Aiven before these credentials work on the live site.
+
+For add, edit, delete, or other access to the online demo, contact [Mostafa S. Ibrahim](https://github.com/MostafaSIbrahim) through this repository's GitHub Issues. Do not include passwords or private student information in a public issue. Credentials for accounts with write permissions are not published.
+
 ## Requirements
 
 The working environment uses Python 3.14.4 on Windows and MySQL Server 8.4.11. Use Python 3.14 and MySQL 8.4 for the closest match. Exact Python package versions, including transitive dependencies, are recorded in `requirements.txt`.
@@ -156,9 +166,36 @@ From the project root:
 .\.venv\Scripts\python.exe backend/manage.py test students --noinput
 ```
 
-The current suite has 15 tests covering CRUD, validation, authentication, authorization, missing records, creation CSRF protection, and page permission values. Django creates and destroys `test_student_management`; the dedicated grant above is necessary. These backend tests do not run JavaScript or verify browser layout.
+The current suite has 18 tests covering CRUD, validation, authentication, authorization, missing records, creation CSRF protection, page permission values, and demo seeding. Django creates and destroys `test_student_management`; the dedicated grant above is necessary. These backend tests do not run JavaScript or verify browser layout.
 
 For a browser smoke test, create a disposable student, edit its status, refresh to confirm persistence, search and view it, then delete it and refresh again. Check a view-only account sees no Add, Edit, or Delete actions.
+
+## Bulk sample data and demo users
+
+Run from the project root against the database selected by your environment:
+
+```powershell
+.\.venv\Scripts\python.exe backend/manage.py seed_demo --students 50
+```
+
+The command prompts privately for an initial password shared by newly created demo accounts. Choose a strong password and keep it private. It is validated with Django's password validators. All accounts are active regular users, with no staff or superuser privileges:
+
+| Username | Student actions | Password / availability |
+| --- | --- | --- |
+| `demo_viewer` | View | Public demo password: `viewdemo` (configure separately after seeding) |
+| `demo_creator` | View, add | Private; contact the maintainer for online access |
+| `demo_editor` | View, edit | Private; contact the maintainer for online access |
+| `demo_deleter` | View, delete | Private; contact the maintainer for online access |
+| `demo_manager` | View, add, edit, delete | Private; contact the maintainer for online access |
+| `demo_no_access` | No access to student data | Private; permission-denial demonstration |
+
+Use separate private browser sessions or sign out between accounts to demonstrate the differences. The no-access account can sign in but receives a permission error when the page requests student records. Editing and deletion permissions apply to all students, not only demo records; use fictional data for demonstrations.
+
+Students use numbers `DEMO-0001` onward, fictional names, `example.com` emails, five departments, and a mix of active/inactive statuses. Counts from 0 to 1000 are accepted. Reruns only create missing numbered records and missing accounts. Existing account passwords and permissions, and existing student values, are never overwritten. A previously deleted demo student within the requested range is recreated on a rerun.
+
+For noninteractive use, set a password environment variable privately and supply its name with `--password-env DEMO_PASSWORD`. Never put private passwords directly in command arguments or source control. The intentionally public viewer password above is the only exception. Existing accounts can be reset separately with Django's `changepassword` command. The seed command does not automatically assign `viewdemo`; after seeding, set that password only for `demo_viewer`, preserving its view-only permissions.
+
+To target Aiven, use a separate terminal with the cloud `DB_*` values and `MYSQL_SSL_CA` pointing to the downloaded CA certificate; otherwise the command uses the local `.env`. Confirm the target before running, and close the cloud-configured terminal afterward. No changes to cloud data happen merely by deploying this command. Do not add it to the build or startup scripts.
 
 ## API reference
 
