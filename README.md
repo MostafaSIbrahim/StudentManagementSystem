@@ -2,6 +2,12 @@
 
 A Django and MySQL application with an HTML, CSS, and JavaScript frontend. It supports student creation, viewing, editing, deletion, search, sign-in/sign-out, and permission-based actions.
 
+## Live application
+
+[Open Student Management System](https://studentmanagementsystem-ck3k.onrender.com/)
+
+The deployed application runs on Render with an Aiven MySQL database. Sign in with an account created in the cloud application; local development accounts are separate.
+
 ## Requirements
 
 The working environment uses Python 3.14.4 on Windows and MySQL Server 8.4.11. Use Python 3.14 and MySQL 8.4 for the closest match. Exact Python package versions, including transitive dependencies, are recorded in `requirements.txt`.
@@ -10,7 +16,7 @@ The working environment uses Python 3.14.4 on Windows and MySQL Server 8.4.11. U
 - Install [MySQL Community Server](https://dev.mysql.com/downloads/mysql/) 8.4 using its Windows MSI and finish MySQL Configurator. Start its Windows service, use port 3306, and remember the root password.
 - No Node.js installation or frontend build step is required.
 
-These instructions are for local development. The current settings include `DEBUG = True`. Do not deploy this configuration publicly without a separate production configuration.
+These instructions are for local development, where `DJANGO_DEBUG=True` is set in the local `.env`. The deployed application must use `DJANGO_DEBUG=False`, a separate secret key, and the cloud database connection settings with TLS certificate verification.
 
 ## 1. Copy the project and install Python packages
 
